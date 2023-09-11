@@ -45,6 +45,17 @@ docker build . -t masif_seed
 docker run -it -v $PWD:$PWD masif_seed
 ```
 
+If you run into the following error loading the `nvcr.io/nvidia/tensorflow:18.12-py3` image, you need to create an account with the NVIDIA GPU Cloud (NGC) registry and configure your system with the API key - [instructions here](https://ngc.nvidia.com/setup/api-key).
+
+```
+------
+ > [internal] load metadata for nvcr.io/nvidia/tensorflow:18.12-py3:
+------
+failed to solve: rpc error: code = Unknown desc = failed to solve with frontend dockerfile.v0: 
+  failed to create LLB definition: failed to authorize: 
+  rpc error: code = Unknown desc = failed to fetch anonymous token: unexpected status: 401 Unauthorized
+``` 
+
 ## Step-by-step example
 
 We will test MaSIF-seed using one example consisting of a single helix (BH3) and a receptor (Bcl-xL):
