@@ -4,14 +4,14 @@ from default_config.masif_opts import masif_opts
 
 params = {}
 # Directory where the database is located. 
-params['masif_db_root'] = "../../../../../masif/"
+params['masif_db_root'] = "/home/ubuntu/masif_seed/database_h/"
 # Seeds (i.e., the fragments) that will be used for this search. 
 params['top_seed_dir'] = os.path.join(params['masif_db_root'], 'data/masif_peptides/')
 # Root of the targets directory (where to find the sources.)
 params['masif_target_root'] = os.environ['masif_target_root']
 
 # Output directory (target_name, target_site, matched_seed)
-params['out_dir_template'] = 'out_peptides/{}/'
+params['out_dir_template'] = "/home/ubuntu/masif_targets/{}/"
 
 # Target a specific residue.
 # cutoff: the maximum distance of the center of the patch to this residue.

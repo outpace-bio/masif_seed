@@ -13,3 +13,4 @@ if [[ $# -eq 0 ]] ; then
     exit 0
 fi
 python -W ignore $masif_seed_search_root/source/masif_seed_search_nn.py params_peptides $1 
+python -W ignore $masif_seed_search_root/source/masif_seed_search_nn.py params_hairpins $1 
