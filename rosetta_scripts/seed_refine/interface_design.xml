@@ -32,11 +32,11 @@
         <OperateOnResidueSubset name="restrict_to_interface" selector="Not_interface">
             <PreventRepackingRLT/>
         </OperateOnResidueSubset>
-        <OperateOnResidueSubset name="restrict_target2repacking" selector="chainB">
+        <OperateOnResidueSubset name="restrict_target2repacking" selector="chainA">
             <RestrictToRepackingRLT/>
         </OperateOnResidueSubset>
         <DesignRestrictions name="allowed_aas">
-            <Action aas="ADEFGHIKLMNQRSTVWY" selector_logic="chainA"/>
+            <Action aas="ADEFGHIKLMNQRSTVWY" selector_logic="chainB"/>
         </DesignRestrictions>
 
         <IncludeCurrent name="current" />
@@ -57,7 +57,7 @@
 
         <AtomCoordinateCstMover name="constrainCA" coord_dev="0.5" />
 
-        <FastDesign name="FastDesign" scorefxn="sfxn_design" repeats="1" task_operations="current,ex1_ex2,restrict_to_interface,restrict_target2repacking,allowed_aas,upweight_interface" batch="false" ramp_down_constraints="false" cartesian="false" bondangle="false" bondlength="false" min_type="dfpmin_armijo_nonmonotone" relaxscript="no_ref.rosettacon2018.beta_nov16.txt" >
+        <FastDesign name="FastDesign" scorefxn="sfxn_design" repeats="1" task_operations="current,restrict_to_interface,restrict_target2repacking,allowed_aas,upweight_interface" batch="false" ramp_down_constraints="false" cartesian="false" bondangle="false" bondlength="false" min_type="dfpmin_armijo_nonmonotone" relaxscript="no_ref.rosettacon2018.beta_nov16.txt" >
             <MoveMap name="MM" >
                     <Chain number="1" chi="true" bb="true" />
                     <Chain number="2" chi="true" bb="false" />
