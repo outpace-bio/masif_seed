@@ -137,7 +137,7 @@ if __name__ == "__main__":
     parser.add_argument("--target", type=str, help="Target name.")
     parser.add_argument(
         "--pre-refine",
-        "store_true",
+        action="store_true",
         help="Tells the script to use the pre-refined peptides.",
     )
     args = parser.parse_args()
