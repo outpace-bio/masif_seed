@@ -4,7 +4,7 @@
 
 # Now run ZDock's create.pl to actually block these residues.
 
-masif_root=$(git rev-parse --show-toplevel)
+masif_root=/root/masif_seed
 masif_src=$masif_root/source/
 export PYTHON_PATH=$masif_src/:
 while read pdbid_chain1_chain2

@@ -1,5 +1,5 @@
 # Generate the pdbs in the format that zdock needs them.
-masif_root=$(git rev-parse --show-toplevel)
+masif_root=/root/masif_seed
 # The route to your zdock directory
 #zdock_dir=$masif_root/ext_programs/zdock3.0.2_mac_intel/
 zdock_dir=/home/gainza/lpdi_fs/bin/ZDock/zdock3.0.2_linux_x64

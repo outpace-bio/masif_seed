@@ -1,4 +1,4 @@
-masif_root=$(git rev-parse --show-toplevel)
+masif_root=/root/masif_seed
 masif_source=$masif_root/masif/source/
 masif_data=$masif_root/masif/data/
 # Compute geometric invariant descriptors, as implemented in Yin et al. PNAS 2009

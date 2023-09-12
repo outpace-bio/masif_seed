@@ -1,5 +1,5 @@
 repo_root=$(git rev-parse --show-toplevel)
-masif_root=$repo_root/$masif_seed_search_root/masif/
+masif_root=/root/masif_seed
 masif_seed_search_root=$repo_root/masif_seed_search/
 masif_target_root=$masif_seed_search_root/data/masif_targets_seed_benchmark/
 export masif_db_root=/home/gainza/lpdi_fs/masif_design_paper/masif/

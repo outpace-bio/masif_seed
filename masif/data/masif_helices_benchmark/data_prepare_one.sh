@@ -1,5 +1,5 @@
 #!/bin/bash
-masif_root=$(git rev-parse --show-toplevel)
+masif_root=/root/masif_seed
 masif_source=$masif_root/masif/source/
 export PYTHONPATH=$PYTHONPATH:$masif_source
 if [ "$1" == "--file" ]

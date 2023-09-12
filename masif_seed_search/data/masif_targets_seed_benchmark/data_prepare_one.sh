@@ -1,5 +1,5 @@
 #!/bin/bash
-masif_root=../../../
+masif_root=/root/masif_seed
 masif_source=$masif_root/masif/source/
 masif_seed_source=../../source/
 export PYTHONPATH=$masif_source

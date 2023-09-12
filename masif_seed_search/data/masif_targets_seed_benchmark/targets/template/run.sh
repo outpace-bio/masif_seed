@@ -1,5 +1,5 @@
 masif_seed_search_root=$(git rev-parse --show-toplevel)
-masif_root=$masif_seed_search_root/../
+masif_root=/root/masif_seed
 masif_target_root=$masif_seed_search_root/data/masif_targets/
 export masif_db_root=/work/upcorreia/databases/masif_db/
 masif_source=$masif_root/source/

@@ -1,4 +1,4 @@
-masif_root=../../../masif
+masif_root=/root/masif_seed
 masif_seed_root=../../
 masif_source=$masif_root/source/
 masif_seed_source=$masif_seed_root/source/

@@ -1,4 +1,4 @@
-masif_root=$(git rev-parse --show-toplevel)
+masif_root=/root/masif_seed
 masif_source=$masif_root/source/
 masif_ppi_search_source=$masif_root/source/masif_ppi_search
 masif_data=$masif_root/data/

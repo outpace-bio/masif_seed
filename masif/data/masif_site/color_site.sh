@@ -1,6 +1,6 @@
 #!/bin/bash
 masif_seed_root=$(git rev-parse --show-toplevel)
-masif_root=$masif_seed_root/masif
+masif_root=/root/masif_seed
 masif_source=$masif_root/source/
 masif_matlab=$masif_root/source/matlab_libs/
 masif_data=$masif_root/data/

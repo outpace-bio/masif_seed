@@ -1,4 +1,4 @@
-masif_root=$(git rev-parse --show-toplevel)
+masif_root=/root/masif_seed
 masif_source=$masif_root/source/
 export PYTHONPATH=$PYTHONPATH:$masif_source:.
 PDB_ID=$(echo $1| cut -d"_" -f1)
