@@ -119,7 +119,9 @@ def main(args):
     if args.pre_refine:
         all_seeds = glob.glob(f"db_search_results/{args.target}/*/*.pdb")
     else:
-        all_seeds = glob.glob(f"refined_seeds/selected_seeds/*_refined.pdb")
+        all_seeds = glob.glob(
+            f"refined_seeds/{args.target}/selected_seeds/*_refined.pdb"
+        )
     all_seeds = sorted(all_seeds)
     with mp.Pool() as p:
         p.starmap_async(
