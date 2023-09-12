@@ -61,8 +61,6 @@ COPY --from=pymesh /root/PyMesh/dist/pymesh2*.whl dist/
 RUN pip install dist/pymesh2*.whl && \
 	python -c "import pymesh; pymesh.test()"
 
-#RUN git clone --single-branch https://github.com/LPDI-EPFL/masif
-
 # DOWNLOAD/INSTALL APBS
 RUN mkdir /install
 WORKDIR /install
@@ -111,7 +109,8 @@ RUN pip3 install ipython Biopython scikit-learn networkx open3d==0.8.0 dask pack
 #RUN pip install StrBioInfo 
 
 # Clone masif
-WORKDIR /
+WORKDIR /root/
+RUN git clone --single-branch https://github.com/outpace-bio/masif_seed
 
 # We need to define the command to launch when we are going to run the image.
 # We use the keyword 'CMD' to do that.
