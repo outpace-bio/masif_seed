@@ -6,19 +6,30 @@ import os
 import sys
 import glob
 import multiprocessing as mp
+from tqdm import tqdm
+
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 ###### METHODS #########
 # Save a fragment
-def save_fragment(out_fn, residues):
+def save_fragment(out_fn, residues, target_residues=None):
     structBuild = StructureBuilder.StructureBuilder()
     structBuild.init_structure("output")
     structBuild.init_seg(" ")
     structBuild.init_model(0)
     outputStruct = structBuild.get_structure()
-    structBuild.init_chain("A")
+    seed_chain = "A"
+    if target_residues is not None:
+        seed_chain = "B"
+        structBuild.init_chain("A")
+        for res in target_residues:
+            outputStruct[0]["A"].add(res)
+    structBuild.init_chain(seed_chain)
     for res in residues:
-        outputStruct[0]["A"].add(res)
+        outputStruct[0][seed_chain].add(res)
 
     # Output the selected residues
     pdbio = PDBIO()
@@ -63,9 +74,9 @@ def compute_helix_to_peptide_rmsd(ref_peptide, helix):
 ###### END METHODS #########
 
 
-def align_peptide_to_all_others(system, seed_path, all_seeds, pre_refine=False):
+def align_peptide_to_all_others(target, seed_path, all_seeds, pre_refine=False):
     all_dots = []
-    with open("db_search_results/{}/site_0/target.vert".format(system)) as f:
+    with open(f"db_search_results/{target}/site_0/target.vert") as f:
         dots_lines = f.readlines()
         for point_line in dots_lines:
             point = [float(x) for x in point_line.split(",")]
@@ -77,59 +88,71 @@ def align_peptide_to_all_others(system, seed_path, all_seeds, pre_refine=False):
 
     # Open original peptide.
     parser = PDBParser()
-    orig_struct = parser.get_structure(current_struct_fn, current_struct_fn)[0][
-        "A" if pre_refine else "B"
-    ]
+    orig_struct = parser.get_structure(current_struct_fn, current_struct_fn)[0]
+    if not pre_refine:
+        target_struct = orig_struct["A"]
+        orig_struct = orig_struct["B"]
     orig_residues = Selection.unfold_entities(orig_struct, "R")
 
     # Find the amino acids touching target dots
     orig_fragment = find_seed_helix(all_dots, orig_residues)
+    if orig_fragment is None:
+        return
 
     save_fragment(
-        "analysis_fixed_size/out_pdb/{}_frag.pdb".format(current_pep), orig_fragment
+        f"analysis_fixed_size/{target}/out_pdb/{current_pep}_frag.pdb",
+        orig_fragment,
+        None if pre_refine else target_struct,
     )
 
     all_rmsd = []
-    for num_compared, mypep in enumerate(all_seeds, start=1):
-        compared_struct = parser.get_structure(mypep, mypep)[0][
-            "A" if pre_refine else "B"
-        ]
-        residues_compared_struct = Selection.unfold_entities(compared_struct, "R")
+    with open("alignment_errorfile.txt", "a") as f:
+        for num_compared, mypep in enumerate(all_seeds, start=1):
+            compared_struct = parser.get_structure(mypep, mypep)[0][
+                "A" if pre_refine else "B"
+            ]
+            residues_compared_struct = Selection.unfold_entities(compared_struct, "R")
 
-        # Find the amino acids touching target dots
-        compared_fragment = find_seed_helix(all_dots, residues_compared_struct)
-        if compared_fragment is None:
-            all_rmsd.append(-1)
-            continue
+            # Find the amino acids touching target dots
+            compared_fragment = find_seed_helix(all_dots, residues_compared_struct)
+            if compared_fragment is None:
+                all_rmsd.append(-1)
+                continue
 
-        # Do rmsds in both directions and take the minimum.
-        rmsd1 = compute_helix_to_peptide_rmsd(orig_fragment, compared_fragment)
-        rmsd2 = compute_helix_to_peptide_rmsd(compared_fragment, orig_fragment)
+            # Do rmsds in both directions and take the minimum.
+            rmsd1 = compute_helix_to_peptide_rmsd(orig_fragment, compared_fragment)
+            rmsd2 = compute_helix_to_peptide_rmsd(compared_fragment, orig_fragment)
 
-        rmsd = min([rmsd1, rmsd2])
-        if rmsd > 100:
-            print("ERROR: {} {}".format(rmsd, num_compared))
+            rmsd = min([rmsd1, rmsd2])
+            if rmsd > 100:
+                f.write(f"ERROR: {rmsd} {mypep} {seed_path}\n")
 
-        all_rmsd.append(rmsd)
+            all_rmsd.append(rmsd)
 
-    np.save("analysis_fixed_size/out_data/rmsd_{}".format(current_pep), all_rmsd)
+    np.save(f"analysis_fixed_size/{target}/out_data/rmsd_{current_pep}", all_rmsd)
 
 
 def main(args):
+    os.makedirs(f"analysis_fixed_size/{args.target}/out_pdb/", exist_ok=True)
+    os.makedirs(f"analysis_fixed_size/{args.target}/out_data", exist_ok=True)
+
     if args.pre_refine:
         all_seeds = glob.glob(f"db_search_results/{args.target}/*/*.pdb")
     else:
         all_seeds = glob.glob(
-            f"refined_seeds/{args.target}/selected_seeds/*_refined.pdb"
+            f"refined_seeds/{args.target}/selected_seeds/*_refine.pdb"
         )
     all_seeds = sorted(all_seeds)
     with mp.Pool() as p:
-        p.starmap_async(
-            align_peptide_to_all_others,
-            [(args.target, seed, all_seeds, args.pre_refine) for seed in all_seeds],
-        )
-        p.close()
-        p.join()
+        tasks = [
+            p.apply_async(
+                align_peptide_to_all_others,
+                args=(args.target, seed, all_seeds[i + 1 :], args.pre_refine),
+            )
+            for i, seed in enumerate(all_seeds)
+        ]
+        for t in tqdm(tasks, desc="Aligning..."):
+            t.get()
 
 
 if __name__ == "__main__":
