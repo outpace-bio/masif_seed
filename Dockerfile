@@ -39,10 +39,10 @@ RUN git checkout b3bfeec
 RUN python2.7 scons/scons.py install
 
 # Setup environment variables 
-ENV MSMS_BIN /usr/local/bin/msms
-ENV APBS_BIN /usr/local/bin/apbs
-ENV MULTIVALUE_BIN /usr/local/share/apbs/tools/bin/multivalue
-ENV PDB2PQR_BIN /root/pdb2pqr/pdb2pqr.py
+ENV MSMS_BIN=/usr/local/bin/msms
+ENV APBS_BIN=/usr/local/bin/apbs
+ENV MULTIVALUE_BIN=/usr/local/share/apbs/tools/bin/multivalue
+ENV PDB2PQR_BIN=/root/pdb2pqr/pdb2pqr.py
 
 # DOWNLOAD reduce (for protonation)
 WORKDIR /install
